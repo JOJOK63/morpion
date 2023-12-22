@@ -1,8 +1,6 @@
 import './style.scss'
 import {Player} from './Player';
 import {Game} from './Game';
-import { Grid } from './Grid';
-import * as square from './Square'
 
 let player1:Player;
 let player2:Player;
@@ -31,6 +29,9 @@ inputPlayer2Name?.addEventListener("keyup",(e)=>{
         game.party(player1,player2);
     }
 })
+
+
+let btn_replay = document.querySelector('#replay');
 
 
 

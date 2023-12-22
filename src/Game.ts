@@ -26,17 +26,20 @@ export class Game{
                 let playerTurn = this.turnLogic(player1, player2);
                 if(playerTurn ){
                     grid.setSymbol(square, playerTurn)
+                    let winner = this.checkWinner();
+                    if(winner != null){
+                       let winnerDiv = document.querySelector('.divWinner')
+                       winnerDiv?.classList.add("winner");
+                       let winnerDivP = document.querySelector('.divWinner div');
+                       if(winnerDivP){
+                        winnerDivP.innerHTML = `le gagnant est ${winner.name}`;
+
+                       }
+                    }
                 }
             } else {
                 alert("case déja occupée")
             }
-            let table = [grid.getGridValues(square)];
-
-            grid.checkWinner(table)
-            /**
-             * ! a verifier 
-             */
-            console.log(grid.checkWinner(table));
         })
     });
     }
@@ -52,6 +55,7 @@ export class Game{
             return player2;
         }
     }
+
 
 
     public get turn(): number {
@@ -73,5 +77,50 @@ export class Game{
         this._player2 = value;
     }
 
+
+    // Dans votre classe Game
+
+checkWinner(): Player | null {
+    let squares = document.querySelectorAll<HTMLDivElement>(".square");
+
+    // Vérification des lignes
+    for (let i = 0; i < 9; i += 3) {
+        if (this.checkRow(squares[i], squares[i + 1], squares[i + 2])) {
+            return this.getPlayerBySymbol(squares[i].innerText);
+        }
+    }
+
+    // Vérification des colonnes
+    for (let i = 0; i < 3; i++) {
+        if (this.checkRow(squares[i], squares[i + 3], squares[i + 6])) {
+            return this.getPlayerBySymbol(squares[i].innerText);
+        }
+    }
+
+    // Vérification des diagonales
+    if (this.checkRow(squares[0], squares[4], squares[8])) {
+        return this.getPlayerBySymbol(squares[0].innerText);
+    }
+    if (this.checkRow(squares[2], squares[4], squares[6])) {
+        return this.getPlayerBySymbol(squares[2].innerText);
+    }
+
+    return null;
+}
+
+checkRow(cell1: HTMLDivElement, cell2: HTMLDivElement, cell3: HTMLDivElement): boolean {
+    return cell1.innerText.trim() !== '' &&
+        cell1.innerText === cell2.innerText &&
+        cell1.innerText === cell3.innerText;
+}
+
+getPlayerBySymbol(symbol: string): Player | null {
+    if (symbol === this._player1.letter) {
+        return this._player1;
+    } else if (symbol === this._player2.letter) {
+        return this._player2;
+    }
+    return null;
+}
 
 }
